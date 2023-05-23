@@ -9,6 +9,7 @@ ARG HELM_SECRETS_VERSION
 ARG PYTHON_VERSION
 
 # Install required Alpine packages
+
 RUN apk add --update \
     linux-headers \
     git \
@@ -17,11 +18,9 @@ RUN apk add --update \
     libc-dev \
     musl-dev \
     python3-dev \
+    python3 \
     libffi-dev && \
     rm -rf /var/cache/apk/*
-
-# Install Python 3.8.10
-RUN apk add --no-cache python3=3.8.10-r0 python3-dev=3.8.10-r0 py3-pip=20.3.4-r1
 
 # Install helmfile plugin deps
 RUN helm plugin uninstall diff
@@ -31,9 +30,9 @@ RUN helm plugin install https://github.com/futuresimple/helm-secrets --version $
 # diff and secrets plugin don't work
 RUN rm -rf /root/.helm/helm/plugins/https-github.com-databus23-helm-diff /root/.helm/helm/plugins/https-github.com-futuresimple-helm-secrets
 
-# Install Python libraries
+# Install python library
 RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install ruamel.yaml
+RUN python3 -m pip install ruamel.yaml==0.17.21
 RUN python3 -m pip install azure-cli
 
 # Install helmfile
