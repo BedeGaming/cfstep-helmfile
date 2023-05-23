@@ -9,7 +9,6 @@ ARG HELM_SECRETS_VERSION
 ARG PYTHON_VERSION
 
 # Install required Alpine packages
-
 RUN apk add --update \
     linux-headers \
     git \
@@ -17,10 +16,10 @@ RUN apk add --update \
     build-base \
     libc-dev \
     musl-dev \
-    python3-dev=3.8.10-r0 \
-    python3=3.8.10-r0 \
-    libffi-dev && \
-    rm -rf /var/cache/apk/*
+    libffi-dev
+
+# Install Python 3.8.10 from community repository
+RUN apk add --no-cache python3=3.8.10-r2
 
 # Install helmfile plugin deps
 RUN helm plugin uninstall diff
