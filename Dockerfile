@@ -23,7 +23,7 @@ RUN apk add --update \
     rm -rf /var/cache/apk/*
 
 # Install helmfile plugin deps
-
+RUN helm plugin uninstall diff
 RUN helm plugin install https://github.com/databus23/helm-diff --version ${HELM_DIFF_VERSION}
 RUN helm plugin install https://github.com/futuresimple/helm-secrets --version ${HELM_SECRETS_VERSION}
 # I have no idea why but that is need otherwise
@@ -36,8 +36,12 @@ RUN python3 -m pip install ruamel.yaml
 RUN python3 -m pip install azure-cli
 
 # Install helmfile
+ADD https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_${HELMFILE_VERSION}_linux_amd64.tar.gz /tmp/helmfile.tar.gz
+RUN tar xzf /tmp/helmfile.tar.gz -C /tmp && \
+    mv /tmp/helmfile /bin/helmfile && \
+    rm -rf /tmp/helmfile.tar.gz
 
-ADD https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64 /bin/helmfile
+# Set permissions for helmfile binary
 RUN chmod 0755 /bin/helmfile
 
 LABEL helm="${HELM_VERSION}"
