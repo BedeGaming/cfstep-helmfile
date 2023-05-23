@@ -32,7 +32,7 @@ RUN rm -rf /root/.helm/helm/plugins/https-github.com-databus23-helm-diff /root/.
 
 # Install python library
 RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install ruamel.yaml
+RUN python3 -m pip install ruamel.yaml==0.17.21
 RUN python3 -m pip install azure-cli
 
 # Install helmfile
