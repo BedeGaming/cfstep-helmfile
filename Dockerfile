@@ -16,10 +16,28 @@ RUN apk add --update \
     build-base \
     libc-dev \
     musl-dev \
-    libffi-dev
+    libffi-dev \
+    openssl-dev \
+    zlib-dev
 
-# Install Python 3.8.10 from community repository
-RUN apk add --no-cache python3=3.8.10-r2
+# Download and extract Python 3.8.10 source
+RUN wget https://www.python.org/ftp/python/3.8.10/Python-3.8.10.tgz \
+    && tar -xvf Python-3.8.10.tgz \
+    && rm Python-3.8.10.tgz
+
+# Build and install Python 3.8.10
+RUN cd Python-3.8.10 \
+    && ./configure --enable-optimizations \
+    && make -j$(nproc) \
+    && make altinstall
+
+# Cleanup
+RUN rm -rf Python-3.8.10
+
+# Install python libraries
+RUN python3.8 -m pip install --upgrade pip \
+    && python3.8 -m pip install ruamel.yaml \
+    && python3.8 -m pip install azure-cli
 
 # Install helmfile plugin deps
 RUN helm plugin uninstall diff
@@ -28,11 +46,6 @@ RUN helm plugin install https://github.com/futuresimple/helm-secrets --version $
 # I have no idea why but that is need otherwise
 # diff and secrets plugin don't work
 RUN rm -rf /root/.helm/helm/plugins/https-github.com-databus23-helm-diff /root/.helm/helm/plugins/https-github.com-futuresimple-helm-secrets
-
-# Install python library
-RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install ruamel.yaml
-RUN python3 -m pip install azure-cli
 
 # Install helmfile
 ADD https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_${HELMFILE_VERSION}_linux_amd64.tar.gz /tmp/helmfile.tar.gz
