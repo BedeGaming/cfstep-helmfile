@@ -35,6 +35,10 @@ RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install ruamel.yaml==0.17.21
 RUN python3 -m pip install azure-cli
 
+# Install curl && msal
+RUN apk --no-cache add curl
+RUN pip install msal requests --no-cache-dir
+
 # Install helmfile
 ADD https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_${HELMFILE_VERSION}_linux_amd64.tar.gz /tmp/helmfile.tar.gz
 RUN tar xzf /tmp/helmfile.tar.gz -C /tmp && \
