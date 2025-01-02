@@ -36,7 +36,7 @@ RUN python3 -m pip install ruamel.yaml==0.17.21
 RUN python3 -m pip install azure-cli
 
 # Install curl && msal
-RUN apk --no-cache add curl
+RUN apk --no-cache add curl jq base64
 RUN pip install msal requests --no-cache-dir
 
 # Install helmfile
