@@ -1,6 +1,6 @@
 ARG HELM_VERSION
 
-FROM codefresh/cfstep-helm:${HELM_VERSION}
+FROM codefresh/cfstep-helm:3.8.0
 
 ARG HELM_VERSION
 ARG HELMFILE_VERSION
@@ -36,7 +36,7 @@ RUN python3 -m pip install ruamel.yaml==0.17.21
 RUN python3 -m pip install azure-cli
 
 # Install curl && msal
-RUN apk --no-cache add curl jq base64
+RUN apk --no-cache add curl jq coreutils
 RUN pip install msal requests --no-cache-dir
 
 # Install helmfile
